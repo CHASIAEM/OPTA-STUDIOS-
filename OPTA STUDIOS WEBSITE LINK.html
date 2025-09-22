@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opta Studios — Portfolio</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #fff; color: #111; }
+    header { background: #111; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header img { height: 50px; }
+    nav a { color: #fff; margin-left: 1.5rem; text-decoration: none; font-weight: bold; }
+    nav a:hover { color: #d4af37; }
+    section { padding: 3rem 2rem; max-width: 1100px; margin: auto; }
+    h2 { margin-bottom: 1rem; }
+    .portfolio { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .portfolio img { width: 100%; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
+    .portfolio img:hover { transform: scale(1.03); }
+    #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90%; max-height: 80%; border-radius: 8px; }
+    .lightbox-controls { position: absolute; bottom: 20px; display: flex; gap: 1rem; }
+    .lightbox-btn { background: #d4af37; border: none; padding: .5rem 1rem; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    footer { background: #111; color: #d4af37; text-align: center; padding: 1.5rem; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="OPTA_STUDIOS LOGO WHITE.png" alt="Opta Studios Logo">
+    <nav>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="portfolio">
+    <h2>Portfolio</h2>
+    <div id="portfolioGrid" class="portfolio"></div>
+  </section>
+
+  <footer>
+    <img src="OPTA_STUDIOS LOGO WHITE.png" alt="Opta Studios Logo" style="height:40px; margin-bottom:0.5rem;">
+    <p>© 2025 Opta Studios</p>
+    <p>Phone: <a href="tel:+254768356345" style="color:inherit">0768356345</a> | Email: <a href="mailto:emajanichasia@gmail.com" style="color:inherit">emajanichasia@gmail.com</a></p>
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightboxImg" src="" alt="Expanded Portfolio Image">
+    <div class="lightbox-controls">
+      <button id="prevBtn" class="lightbox-btn">◀ Prev</button>
+      <button id="nextBtn" class="lightbox-btn">Next ▶</button>
+    </div>
+  </div>
+
+  <script>
+    // Hardcoded portfolio images (replace with your own image paths in /portfolio/ folder)
+    let imagesList = [
+      'portfolio/photo1.jpg',
+      'portfolio/photo2.jpg',
+      'portfolio/photo3.jpg',
+      'portfolio/photo4.jpg'
+    ];
+
+    let currentIndex = 0;
+
+    const grid = document.getElementById('portfolioGrid');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function renderGrid() {
+      grid.innerHTML = '';
+      imagesList.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `Portfolio image ${i+1}`;
+        img.addEventListener('click', () => openLightbox(i));
+        grid.appendChild(img);
+      });
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lightboxImg.src = imagesList[currentIndex];
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
+      lightboxImg.src = imagesList[currentIndex];
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % imagesList.length;
+      lightboxImg.src = imagesList[currentIndex];
+    }
+
+    prevBtn.addEventListener('click', e => { e.stopPropagation(); showPrev(); });
+    nextBtn.addEventListener('click', e => { e.stopPropagation(); showNext(); });
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Render portfolio on load
+    renderGrid();
+  </script>
+</body>
+</html>
